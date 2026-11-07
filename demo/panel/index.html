@@ -115,6 +115,30 @@
     background: var(--secondary); color: var(--secondary-fg); border-radius: 8px;
     padding: 10px 14px; font-style: italic; font-size: 13.5px; margin-top: 10px;
   }
+  .howto { display: grid; gap: 12px; }
+  .howto .step {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .howto .step h3 { margin: 0 0 6px; font-size: 14.5px; }
+  .howto .step h3 .n {
+    display: inline-flex; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--primary); color: var(--primary-fg); font-size: 12.5px;
+    align-items: center; justify-content: center; margin-right: 8px;
+  }
+  .howto pre {
+    background: var(--console-bg); color: var(--console-fg); border-radius: 8px;
+    padding: 10px 14px; font: 12.5px/1.6 ui-monospace, Consolas, monospace;
+    overflow-x: auto; margin: 8px 0 0;
+  }
+  .howto .note { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+  .howto .gate { color: var(--warn); }
+  table.cases { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.cases th, table.cases td {
+    text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.cases th { color: var(--muted); font-weight: 600; }
   footer { margin-top: 34px; color: var(--muted); font-size: 12.5px; }
 </style>
 </head>
@@ -198,6 +222,62 @@
     <em>infraestrutura</em> é reprodutível; <strong>criar um caso novo</strong>
     (<code>/discovery-novo-caso &lt;tema&gt;</code> no Claude Code) prova que a
     <em>esteira generaliza</em> — não há roteiro decorado.</p>
+
+  <h2>Como rodar a esteira</h2>
+  <div class="howto">
+    <div class="step">
+      <h3><span class="n">1</span>Suba o laboratório</h3>
+      <p class="note">Pelos botões acima (Start / Status) ou pelo terminal:</p>
+      <pre>cd c:\Users\dennis\cto-scale\live-discovery
+./lab.sh start      # sobe containers + MedAgenda
+./lab.sh status     # confere os 5 serviços verdes</pre>
+    </div>
+    <div class="step">
+      <h3><span class="n">2</span>Abra o Claude Code na raiz do repositório</h3>
+      <p class="note">Os comandos <code>/discovery-*</code> vivem em
+        <code>.claude/commands/</code> — só aparecem com o Claude Code aberto
+        <strong>nesta pasta</strong> (terminal: <code>claude</code>, ou a extensão
+        do VS Code). Digite <code>/</code> e eles aparecem no autocomplete.</p>
+    </div>
+    <div class="step">
+      <h3><span class="n">3</span>Rode os comandos</h3>
+      <p class="note">Caso novo completo:</p>
+      <pre>/discovery-novo-caso telemedicina   # o agente gera as 3 reuniões e publica
+/discovery-completo                 # ou etapa por etapa, abaixo</pre>
+      <p class="note">Etapa por etapa (você aprova entre cada uma):</p>
+      <pre>/discovery-importar     → síntese com evidências
+/discovery-brief        → Product Brief        <span class="gate">⏸ você aprova</span>
+/discovery-prd          → PRD                  <span class="gate">⏸ você aprova</span>
+/discovery-arquitetura  → AS-IS/TO-BE/ADRs     <span class="gate">⏸ você aprova</span>
+/discovery-backlog      → épico + histórias    <span class="gate">⏸ você aprova</span>
+/discovery-publicar     → publica no Plane
+/discovery-implementar HIST-101 → branch → testes → PR → aviso no Mattermost</pre>
+      <p class="note">Em cada ⏸ o agente apresenta o documento e espera você
+        dizer “aprovado” (ou pedir ajustes) antes de seguir.</p>
+    </div>
+    <div class="step">
+      <h3><span class="n">ℹ</span>Painel × comandos — quem faz o quê</h3>
+      <table class="cases">
+        <tr><th>Este painel (:3999)</th>
+            <td>roda a <strong>infraestrutura</strong>: start, stop, seed, verify,
+            reproduzir do zero</td></tr>
+        <tr><th>/discovery-* (Claude Code)</th>
+            <td>rodam a <strong>esteira de discovery</strong> — precisam do agente,
+            porque é a LLM que lê as conversas, escreve os documentos e implementa
+            o código</td></tr>
+      </table>
+      <p class="note" style="margin-top:10px">Estado atual dos casos:</p>
+      <table class="cases">
+        <tr><th>Caso 1 — cancelamentos</th>
+            <td>esteira completa, PR #1 aberto no Forgejo — nada a rodar, é o
+            resultado para mostrar</td></tr>
+        <tr><th>Caso 2 — no-show</th>
+            <td>síntese pronta, <span class="gate">⏸ pausado no gate do brief</span> —
+            continue com <code>/discovery-brief</code> apontando para
+            <code>output/cases/no-show/</code></td></tr>
+      </table>
+    </div>
+  </div>
 
   <h2>A esteira de discovery (no Claude Code)</h2>
   <div class="pipe">
