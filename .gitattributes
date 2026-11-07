@@ -1,0 +1,10 @@
+* text=auto
+*.sh text eol=lf
+*.md text
+*.ts text
+*.tsx text
+*.json text
+*.yml text
+*.yaml text
+*.png binary
+*.ico binary
