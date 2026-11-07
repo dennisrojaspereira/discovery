@@ -158,6 +158,47 @@
     apaga TODOS os volumes e dados e reconstrói tudo (10–20 min, baixa imagens se necessário).</p>
   <div id="console">Saída dos comandos aparece aqui…</div>
 
+  <h2>Casos de discovery</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head">
+        <span class="svc-name">📅 Caso 1 — Cancelamentos e horários ociosos</span>
+      </div>
+      <p class="svc-desc">Caso original: paciente cancela e o horário morre.
+        Esteira completa executada — até o PR #1 (HIST-101, lista de espera).</p>
+      <div class="links">
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/negocio-medagenda">💬 Negócio</a>
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/produto-medagenda">💬 Produto</a>
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/tecnologia-medagenda">💬 Tecnologia</a>
+        <a class="btn" target="_blank" href="http://localhost:3000/labadmin/cto-discovery-lab/pulls/1">🔀 PR #1</a>
+      </div>
+      <p class="svc-desc">Artefatos: <code>output/</code> (síntese → brief → PRD →
+        AS-IS/TO-BE/ADRs → backlog) · publicados no Plane.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="svc-name">🆕 Caso 2 — No-show (faltas sem aviso)</span>
+      </div>
+      <p class="svc-desc">Caso <strong>gerado ao vivo pelo agente</strong> via
+        <code>/discovery-novo-caso</code>: 3 reuniões inéditas (74 falas) simuladas
+        pela própria LLM da sessão e publicadas em canais novos. Gancho real no
+        código: o status <code>NO_SHOW</code> existe no schema, mas é um estado
+        órfão (sem endpoint nem tela).</p>
+      <div class="links">
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/negocio-no-show">💬 Negócio</a>
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/produto-no-show">💬 Produto</a>
+        <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/tecnologia-no-show">💬 Tecnologia</a>
+      </div>
+      <p class="svc-desc">Síntese com evidências:
+        <code>output/cases/no-show/discovery/sintese-conversas.md</code> ·
+        esteira ⏸ <strong>pausada no gate de aprovação do Product Brief</strong>.</p>
+    </div>
+  </div>
+  <p class="hint">💡 <strong>Reproduzir do zero</strong> prova que a
+    <em>infraestrutura</em> é reprodutível; <strong>criar um caso novo</strong>
+    (<code>/discovery-novo-caso &lt;tema&gt;</code> no Claude Code) prova que a
+    <em>esteira generaliza</em> — não há roteiro decorado.</p>
+
   <h2>A esteira de discovery (no Claude Code)</h2>
   <div class="pipe">
     <div class="pipe-step"><code>/discovery-importar</code><span>lê as conversas do Mattermost e gera síntese com evidências</span></div>
