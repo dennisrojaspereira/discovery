@@ -111,3 +111,37 @@ resultado com link do PR.
 - Artefatos do discovery já gerados ficam em `output/` — dá para mostrar o
   resultado mesmo sem reexecutar a esteira.
 - PR já aberto fica no Forgejo; a notificação fica no histórico do canal.
+
+---
+
+## Perguntas frequentes de CTOs
+
+### "Você está rodando vários agentes ou um agente por sessão?"
+
+**Um agente por sessão.** Toda a esteira roda em uma única sessão do Claude
+Code, agindo como agente orquestrador — não há enxame de agentes em paralelo.
+
+- **Os "agentes" do BMAD são papéis, não processos.** Quando a esteira executa
+  `/discovery-brief` (Analyst), `/discovery-prd` (PM) e `/discovery-arquitetura`
+  (Architect), é o *mesmo* agente, na *mesma* sessão, assumindo cada papel em
+  sequência — cada skill BMAD carrega as instruções, o template e a postura
+  daquele papel. É troca de chapéu, não troca de processo. Vantagem: contexto
+  contínuo (o PM conhece o que o Analyst concluiu, sem handoff) e custo de uma
+  sessão só.
+- **O que é separado de verdade são as integrações determinísticas.** Os
+  scripts (`mm.mjs`, `plane.mjs`, `forgejo.mjs`) não são agentes — são CLIs que
+  o agente invoca. O Discovery Bot do Mattermost também não é um agente; é uma
+  identidade de API para postar notificações.
+- **Multi-agente existe como opção, não como padrão.** O Claude Code suporta
+  subagentes (paralelizar pesquisa, revisão com múltiplos revisores etc.) e o
+  BMAD tem o `bmad-party-mode` para simular vários papéis debatendo. Para esta
+  esteira, porém, o agente único é intencional: o fluxo é sequencial com pontos
+  de aprovação humana entre as etapas, então paralelismo não compraria nada — e
+  um agente só torna o processo mais rastreável, que é a mensagem central da
+  demo.
+
+**Frase pronta:** *"É um agente por sessão. Os 'agentes' do BMAD (Analyst, PM,
+Architect) são papéis que o mesmo agente assume em sequência, com gates de
+aprovação humana entre eles; as integrações com Mattermost, Plane e Forgejo são
+scripts determinísticos que ele invoca. Multi-agente é suportado, mas aqui
+seria complexidade sem ganho."*
