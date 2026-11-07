@@ -19,5 +19,8 @@
     "test:e2e": "npm run test:e2e --workspace apps/medagenda-api",
     "prisma:migrate": "npm run prisma:migrate --workspace apps/medagenda-api",
     "prisma:seed": "npm run prisma:seed --workspace apps/medagenda-api"
+  },
+  "devDependencies": {
+    "marked": "^18.1.3"
   }
 }
