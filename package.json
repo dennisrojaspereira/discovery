@@ -1,0 +1,23 @@
+{
+  "name": "cto-discovery-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Laboratório de engenharia agêntica: da conversa de negócio ao Pull Request (MedAgenda + BMAD + Mattermost + Plane + Forgejo)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace apps/medagenda-api",
+    "dev:web": "npm run dev --workspace apps/medagenda-web",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:api": "npm run test --workspace apps/medagenda-api",
+    "test:e2e": "npm run test:e2e --workspace apps/medagenda-api",
+    "prisma:migrate": "npm run prisma:migrate --workspace apps/medagenda-api",
+    "prisma:seed": "npm run prisma:seed --workspace apps/medagenda-api"
+  }
+}

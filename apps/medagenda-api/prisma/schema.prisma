@@ -1,0 +1,167 @@
+// ============================================================
+// MedAgenda — schema do banco (PostgreSQL)
+// Proteção contra agendamentos concorrentes:
+//  - além da validação transacional na aplicação, a migration
+//    `add_appointment_no_overlap` cria uma EXCLUSION CONSTRAINT
+//    (btree_gist) que impede, no banco, dois agendamentos
+//    SCHEDULED sobrepostos para o mesmo médico.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  RECEPCAO
+  MEDICO
+}
+
+enum DoctorStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(RECEPCAO)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model Specialty {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  doctors Doctor[]
+
+  @@map("specialties")
+}
+
+model Doctor {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String
+  crm         String
+  crmUf       String       @db.VarChar(2)
+  specialtyId String       @db.Uuid
+  phone       String
+  email       String       @unique
+  status      DoctorStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  specialty          Specialty           @relation(fields: [specialtyId], references: [id])
+  availabilityRules  AvailabilityRule[]
+  availabilityBlocks AvailabilityBlock[]
+  appointments       Appointment[]
+
+  @@unique([crm, crmUf])
+  @@index([specialtyId])
+  @@map("doctors")
+}
+
+model Patient {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  birthDate DateTime @db.Date
+  phone     String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@map("patients")
+}
+
+model AvailabilityRule {
+  id              String   @id @default(uuid()) @db.Uuid
+  doctorId        String   @db.Uuid
+  weekday         Int // 0 = domingo ... 6 = sábado
+  startTime       String   @db.VarChar(5) // "HH:mm"
+  endTime         String   @db.VarChar(5) // "HH:mm"
+  slotDurationMin Int
+  bufferMin       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, weekday, startTime])
+  @@index([doctorId])
+  @@map("availability_rules")
+}
+
+model AvailabilityBlock {
+  id        String   @id @default(uuid()) @db.Uuid
+  doctorId  String   @db.Uuid
+  startsAt  DateTime
+  endsAt    DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([doctorId, startsAt])
+  @@map("availability_blocks")
+}
+
+model Appointment {
+  id             String            @id @default(uuid()) @db.Uuid
+  doctorId       String            @db.Uuid
+  patientId      String            @db.Uuid
+  startsAt       DateTime
+  endsAt         DateTime
+  status         AppointmentStatus @default(SCHEDULED)
+  cancelReason   String?
+  cancelledAt    DateTime?
+  idempotencyKey String?           @unique
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@index([doctorId, startsAt])
+  @@index([patientId, startsAt])
+  @@index([status, startsAt])
+  @@map("appointments")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  action    String // ex.: APPOINTMENT_CREATED, DOCTOR_DEACTIVATED
+  entity    String // ex.: Appointment, Doctor
+  entityId  String?
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

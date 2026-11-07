@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+infrastructure/**/.env
+!infrastructure/**/.env.example
+
+# Infra data volumes (persistent data lives in named volumes / data dirs)
+infrastructure/**/data/
+infrastructure/plane/plane-app/
+
+# Logs & temp
+*.log
+logs/
+.DS_Store
+Thumbs.db
+coverage/
+playwright-report/
+test-results/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local state do laboratório (tokens provisionados em runtime)
+.lab-state/

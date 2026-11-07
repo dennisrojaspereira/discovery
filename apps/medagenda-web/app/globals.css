@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MedAgenda — identidade visual (saúde: azul, branco, verde suave)
+   Tailwind v4: tokens definidos via @theme geram utilitários
+   (bg-primary, text-muted-foreground, etc.)
+   ============================================================ */
+
+@theme {
+  --color-background: #f6f9fc;
+  --color-foreground: #0f2a43;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0f2a43;
+
+  --color-primary: #1569b3;
+  --color-primary-hover: #115a9a;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #e8f1f9;
+  --color-secondary-foreground: #134e7e;
+
+  --color-accent: #3fa98e;
+  --color-accent-soft: #e4f4ef;
+  --color-accent-foreground: #ffffff;
+
+  --color-muted: #eef3f8;
+  --color-muted-foreground: #5b7187;
+
+  --color-destructive: #c23b3b;
+  --color-destructive-soft: #fbeaea;
+  --color-destructive-foreground: #ffffff;
+
+  --color-warning: #b07818;
+  --color-warning-soft: #fdf3e0;
+
+  --color-border: #d8e3ee;
+  --color-ring: #1569b3;
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #cfe3f5;
+}
