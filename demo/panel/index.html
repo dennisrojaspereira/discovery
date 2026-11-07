@@ -98,6 +98,23 @@
     background: var(--warn-soft); border: 1px solid var(--warn); color: var(--warn);
     border-radius: 10px; padding: 10px 14px; font-size: 13.5px; margin-top: 18px;
   }
+  details.faq {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px;
+  }
+  details.faq summary {
+    cursor: pointer; font-weight: 650; font-size: 15px; list-style: none;
+  }
+  details.faq summary::before { content: '▸ '; color: var(--muted); }
+  details.faq[open] summary::before { content: '▾ '; }
+  details.faq .faq-body { margin-top: 10px; font-size: 14px; color: var(--fg); }
+  details.faq .faq-body p { margin: 8px 0; }
+  details.faq .faq-body ul { margin: 8px 0; padding-left: 20px; }
+  details.faq .faq-body li { margin: 6px 0; }
+  details.faq .faq-body .quote {
+    background: var(--secondary); color: var(--secondary-fg); border-radius: 8px;
+    padding: 10px 14px; font-style: italic; font-size: 13.5px; margin-top: 10px;
+  }
   footer { margin-top: 34px; color: var(--muted); font-size: 12.5px; }
 </style>
 </head>
@@ -151,6 +168,43 @@
     <div class="pipe-step"><code>/discovery-publicar</code><span>publica docs e backlog no Plane via API</span></div>
     <div class="pipe-step"><code>/discovery-implementar HIST-101</code><span>história → branch → testes → PR no Forgejo → aviso no Mattermost</span></div>
   </div>
+
+  <h2>Perguntas frequentes de CTOs</h2>
+  <details class="faq">
+    <summary>Está rodando vários agentes ou um agente por sessão?</summary>
+    <div class="faq-body">
+      <p><strong>Um agente por sessão.</strong> Toda a esteira roda em uma única
+      sessão do Claude Code, agindo como agente orquestrador — não há enxame de
+      agentes em paralelo.</p>
+      <ul>
+        <li><strong>Os “agentes” do BMAD são papéis, não processos.</strong>
+          Em <code>/discovery-brief</code> (Analyst), <code>/discovery-prd</code>
+          (PM) e <code>/discovery-arquitetura</code> (Architect) é o
+          <em>mesmo</em> agente, na <em>mesma</em> sessão, assumindo cada papel
+          em sequência — cada skill BMAD carrega as instruções e o template
+          daquele papel. É troca de chapéu, não troca de processo. Vantagem:
+          contexto contínuo (o PM conhece o que o Analyst concluiu, sem handoff)
+          e custo de uma sessão só.</li>
+        <li><strong>O que é separado de verdade são as integrações
+          determinísticas.</strong> Os scripts (<code>mm.mjs</code>,
+          <code>plane.mjs</code>, <code>forgejo.mjs</code>) não são agentes —
+          são CLIs que o agente invoca. O Discovery Bot do Mattermost também não
+          é um agente; é uma identidade de API para postar notificações.</li>
+        <li><strong>Multi-agente existe como opção, não como padrão.</strong>
+          O Claude Code suporta subagentes (pesquisa paralela, revisão com
+          múltiplos revisores) e o BMAD tem o <code>bmad-party-mode</code>. Para
+          esta esteira, o agente único é intencional: o fluxo é sequencial com
+          pontos de aprovação humana entre as etapas — paralelismo não compraria
+          nada, e um agente só torna o processo mais rastreável, que é a
+          mensagem central da demo.</li>
+      </ul>
+      <div class="quote">“É um agente por sessão. Os ‘agentes’ do BMAD (Analyst,
+      PM, Architect) são papéis que o mesmo agente assume em sequência, com
+      gates de aprovação humana entre eles; as integrações com Mattermost,
+      Plane e Forgejo são scripts determinísticos que ele invoca. Multi-agente
+      é suportado, mas aqui seria complexidade sem ganho.”</div>
+    </div>
+  </details>
 
   <footer>
     Ambiente de demonstração 100% local — dados sintéticos; nenhuma informação real de pacientes.
