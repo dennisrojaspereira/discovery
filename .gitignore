@@ -15,6 +15,7 @@ out/
 !.env.example
 infrastructure/**/.env
 !infrastructure/**/.env.example
+infrastructure/plane/plane.env
 
 # Infra data volumes (persistent data lives in named volumes / data dirs)
 infrastructure/**/data/
@@ -36,3 +37,5 @@ test-results/
 
 # Local state do laboratório (tokens provisionados em runtime)
 .lab-state/
+backups/
+cookies.txt
