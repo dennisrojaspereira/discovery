@@ -162,9 +162,8 @@
 
   <h2>Atalhos do demo</h2>
   <div class="links">
-    <a class="btn" target="_blank" href="http://localhost:3000/labadmin/cto-discovery-lab/pulls/1">🔀 PR #1 — HIST-101 no Forgejo</a>
-    <a class="btn" target="_blank" href="http://localhost:8080/medagenda/projects/2a74ab7d-4005-41a0-8365-315ca308c264/issues">📋 Épico e histórias no Plane</a>
-    <a class="btn" target="_blank" href="http://localhost:8080/medagenda/projects/2a74ab7d-4005-41a0-8365-315ca308c264/pages">📚 Documentação no Plane</a>
+    <a class="btn" target="_blank" href="http://localhost:3000/labadmin/cto-discovery-lab/pulls">🔀 Pull Requests no Forgejo</a>
+    <a class="btn" target="_blank" href="http://localhost:8080/medagenda/projects/">📋 Projeto MedAgenda no Plane (épicos, histórias e docs)</a>
     <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/negocio-medagenda">💬 Conversa de Negócio</a>
     <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/entregas-medagenda">🤖 Notificações do Discovery Bot</a>
   </div>
@@ -194,7 +193,7 @@
         <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/negocio-medagenda">💬 Negócio</a>
         <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/produto-medagenda">💬 Produto</a>
         <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/tecnologia-medagenda">💬 Tecnologia</a>
-        <a class="btn" target="_blank" href="http://localhost:3000/labadmin/cto-discovery-lab/pulls/1">🔀 PR #1</a>
+        <a class="btn" target="_blank" href="http://localhost:3000/labadmin/cto-discovery-lab/pulls">🔀 PRs</a>
       </div>
       <p class="svc-desc">Artefatos: <code>output/</code> (síntese → brief → PRD →
         AS-IS/TO-BE/ADRs → backlog) · publicados no Plane.</p>
@@ -231,9 +230,10 @@
         <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/produto-telemedicina">💬 Produto</a>
         <a class="btn" target="_blank" href="http://localhost:8065/medagenda/channels/tecnologia-telemedicina">💬 Tecnologia</a>
       </div>
-      <p class="svc-desc">Síntese:
-        <code>output/cases/telemedicina/discovery/sintese-conversas.md</code> ·
-        esteira ⏸ <strong>pausada no gate de aprovação do Product Brief</strong>.</p>
+      <p class="svc-desc">Esteira completa com aprovações: síntese → brief →
+        PRD → arquitetura (4 ADRs) → backlog. <strong>Épico + 11 histórias e 12
+        páginas publicados no Plane</strong> (label <code>caso:telemedicina</code>).
+        Pronto para <code>/discovery-implementar TELE-HIST-101</code>.</p>
     </div>
   </div>
   <p class="hint">💡 <strong>Reproduzir do zero</strong> prova que a
@@ -293,6 +293,10 @@
             <td>síntese pronta, <span class="gate">⏸ pausado no gate do brief</span> —
             continue com <code>/discovery-brief</code> apontando para
             <code>output/cases/no-show/</code></td></tr>
+        <tr><th>Caso 3 — telemedicina</th>
+            <td>discovery completo e aprovado (brief → PRD → arquitetura → backlog);
+            épico publicado no Plane — próximo passo:
+            <code>/discovery-implementar TELE-HIST-101</code></td></tr>
       </table>
     </div>
   </div>

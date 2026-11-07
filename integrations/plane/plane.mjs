@@ -278,6 +278,92 @@ async function publishBacklog() {
   console.log(`\nBacklog publicado em ${BASE}/${SLUG}/projects/${project.id}/issues`);
 }
 
+/**
+ * Publica um caso completo (docs como páginas + épico + histórias) a partir de
+ * um manifesto JSON — usado pelo /discovery-novo-caso.
+ *   node plane.mjs publish-case output/cases/<slug>/backlog/plane-manifest.json
+ */
+async function publishCase(manifestPath) {
+  if (!manifestPath) throw new Error('Informe o caminho do plane-manifest.json');
+  const manifest = JSON.parse(readFileSync(path.join(ROOT, manifestPath), 'utf8'));
+  const project = await ensureProject();
+
+  // Labels: união das labels do épico e das histórias
+  const labelNames = [
+    ...new Set([
+      ...(manifest.epic.labels ?? []),
+      ...manifest.stories.flatMap((s) => s.labels ?? []),
+    ]),
+  ];
+  const labels = await ensureLabels(project.id, labelNames);
+
+  // Páginas de documentação do caso
+  const session = new Session();
+  await session.login();
+  const existingPages = await session.api(
+    `/workspaces/${SLUG}/projects/${project.id}/pages/`,
+  );
+  const pageNames = new Set(
+    (Array.isArray(existingPages) ? existingPages : existingPages.results ?? []).map((p) => p.name),
+  );
+  for (const [title, file] of manifest.docs ?? []) {
+    if (!existsSync(path.join(ROOT, file))) {
+      console.log(`  (pulado, arquivo ausente: ${file})`);
+      continue;
+    }
+    if (pageNames.has(title)) {
+      console.log(`  página já existe: ${title}`);
+      continue;
+    }
+    await session.api(`/workspaces/${SLUG}/projects/${project.id}/pages/`, {
+      method: 'POST',
+      body: JSON.stringify({ name: title, description_html: mdToHtml(md(file)), access: 0 }),
+    });
+    console.log(`  página criada: ${title}`);
+  }
+
+  // Épico + histórias
+  const issuesPath = `/workspaces/${SLUG}/projects/${project.id}/issues/`;
+  const list = await v1(`${issuesPath}?per_page=100`);
+  const existing = new Map((list.results ?? []).map((i) => [i.name, i]));
+
+  let epic = existing.get(manifest.epic.title);
+  if (!epic) {
+    epic = await v1(issuesPath, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: manifest.epic.title,
+        description_html: mdToHtml(md(manifest.epic.descriptionFile)),
+        labels: (manifest.epic.labels ?? []).map((l) => labels[l].id),
+        priority: manifest.epic.priority ?? 'high',
+      }),
+    });
+    console.log(`Épico criado: ${manifest.epic.title}`);
+  } else {
+    console.log('Épico já existia.');
+  }
+
+  for (const story of manifest.stories) {
+    if (existing.has(story.title)) {
+      console.log(`  história já existe: ${story.id}`);
+      continue;
+    }
+    const html = story.file ? mdToHtml(md(story.file)) : marked.parse(story.text ?? '');
+    await v1(issuesPath, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: story.title,
+        description_html: html,
+        labels: (story.labels ?? []).map((l) => labels[l].id),
+        parent: epic.id,
+        priority: story.priority ?? 'none',
+      }),
+    });
+    console.log(`  história criada: ${story.id}`);
+  }
+  console.log(`\nCaso publicado em ${BASE}/${SLUG}/projects/${project.id}/issues`);
+}
+
 async function getStory(histId) {
   const project = await ensureProject();
   const list = await v1(`/workspaces/${SLUG}/projects/${project.id}/issues/?per_page=100`);
@@ -318,6 +404,7 @@ const run = {
   'ensure-project': ensureProject,
   'publish-docs': publishDocs,
   'publish-backlog': publishBacklog,
+  'publish-case': () => publishCase(arg1),
   'get-story': () => getStory(arg1),
   'list-stories': listStories,
   verify,

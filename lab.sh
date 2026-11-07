@@ -86,11 +86,19 @@ cmd_bootstrap() {
   log "6/7 Provisionando Forgejo (admin, repo, push do monorepo)…"
   node integrations/forgejo/setup.mjs
   log "7/7 Provisionando Plane (instância, workspace, API token)…"
-  docker cp integrations/plane/bootstrap-instance.py plane-api-1:/tmp/bootstrap-instance.py
-  docker exec -w /code -e PYTHONPATH=/code plane-api-1 python /tmp/bootstrap-instance.py \
+  # MSYS_NO_PATHCONV evita que o Git Bash (Windows) converta /tmp e /code em
+  # caminhos Windows ("Cwd must be an absolute path")
+  MSYS_NO_PATHCONV=1 docker cp integrations/plane/bootstrap-instance.py plane-api-1:/tmp/bootstrap-instance.py
+  MSYS_NO_PATHCONV=1 docker exec -w /code -e PYTHONPATH=/code plane-api-1 python /tmp/bootstrap-instance.py \
     | tee "$STATE_DIR/plane-bootstrap.out"
-  grep -E '^PLANE_' "$STATE_DIR/plane-bootstrap.out" > "$STATE_DIR/plane.env" || true
+  grep -E '^PLANE_(API_KEY|WORKSPACE_SLUG)=' "$STATE_DIR/plane-bootstrap.out" > "$STATE_DIR/plane.env"
   echo "PLANE_URL=http://localhost:8080" >> "$STATE_DIR/plane.env"
+  log "Publicando discovery no Plane (casos existentes)…"
+  node integrations/plane/plane.mjs publish-docs || true
+  node integrations/plane/plane.mjs publish-backlog || true
+  for manifest in output/cases/*/backlog/plane-manifest.json; do
+    [ -f "$manifest" ] && node integrations/plane/plane.mjs publish-case "$manifest" || true
+  done
   start_apps
   log "Bootstrap concluído. Rode ./lab.sh verify"
 }

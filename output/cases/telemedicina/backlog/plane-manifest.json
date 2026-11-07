@@ -1,0 +1,36 @@
+{
+  "caseSlug": "telemedicina",
+  "epic": {
+    "title": "Épico · Telemedicina — retornos por vídeo",
+    "descriptionFile": "output/cases/telemedicina/backlog/backlog.md",
+    "labels": ["épico", "caso:telemedicina"],
+    "priority": "high"
+  },
+  "docs": [
+    ["Caso telemedicina — Transcrição: Negócio", "demo/cases/telemedicina/transcripts/01-negocio.md"],
+    ["Caso telemedicina — Transcrição: Produto", "demo/cases/telemedicina/transcripts/02-produto.md"],
+    ["Caso telemedicina — Transcrição: Tecnologia", "demo/cases/telemedicina/transcripts/03-tecnologia.md"],
+    ["Caso telemedicina — Síntese do discovery", "output/cases/telemedicina/discovery/sintese-conversas.md"],
+    ["Caso telemedicina — Product Brief", "output/cases/telemedicina/product-brief/product-brief.md"],
+    ["Caso telemedicina — PRD", "output/cases/telemedicina/prd/prd.md"],
+    ["Caso telemedicina — Arquitetura TO-BE", "output/cases/telemedicina/architecture/to-be.md"],
+    ["Caso telemedicina — ADR-T01 Vídeo como commodity", "output/cases/telemedicina/architecture/adr/ADR-T01-video-como-commodity.md"],
+    ["Caso telemedicina — ADR-T02 Modalidade na disponibilidade", "output/cases/telemedicina/architecture/adr/ADR-T02-modalidade-na-regra-de-disponibilidade.md"],
+    ["Caso telemedicina — ADR-T03 Sem gravação por default", "output/cases/telemedicina/architecture/adr/ADR-T03-sem-gravacao-por-default.md"],
+    ["Caso telemedicina — ADR-T04 Notificação como componente", "output/cases/telemedicina/architecture/adr/ADR-T04-notificacao-como-componente.md"],
+    ["Caso telemedicina — Matriz de rastreabilidade", "output/cases/telemedicina/backlog/matriz-rastreabilidade.md"]
+  ],
+  "stories": [
+    { "id": "TELE-HIST-101", "title": "TELE-HIST-101 · Modalidade e tipo de consulta no agendamento (API)", "file": "output/cases/telemedicina/backlog/stories/TELE-HIST-101-modalidade-e-tipo.md", "labels": ["caso:telemedicina", "fase-1"], "priority": "high" },
+    { "id": "TELE-HIST-102", "title": "TELE-HIST-102 · Modalidade na disponibilidade e filtro de slots", "file": "output/cases/telemedicina/backlog/stories/TELE-HIST-102-modalidade-na-disponibilidade.md", "labels": ["caso:telemedicina", "fase-1"], "priority": "high" },
+    { "id": "TELE-HIST-103", "title": "TELE-HIST-103 · Elegibilidade parametrizada + feature flag", "file": "output/cases/telemedicina/backlog/stories/TELE-HIST-103-elegibilidade-e-flag.md", "labels": ["caso:telemedicina", "fase-1"], "priority": "medium" },
+    { "id": "TELE-HIST-104", "title": "TELE-HIST-104 · Link da teleconsulta com acesso restrito (API)", "file": "output/cases/telemedicina/backlog/stories/TELE-HIST-104-link-restrito.md", "labels": ["caso:telemedicina", "fase-1"], "priority": "medium" },
+    { "id": "TELE-HIST-105", "title": "TELE-HIST-105 · UI: seletor de modalidade, badge e link na agenda", "file": "output/cases/telemedicina/backlog/stories/TELE-HIST-105-ui-modalidade.md", "labels": ["caso:telemedicina", "fase-1"], "priority": "medium" },
+    { "id": "TELE-HIST-201", "text": "Integração com provedor de vídeo: salas efêmeras via API (criar/obter link/expirar). TELE-RF-101, ADR-T01. Aguarda piloto + parecer.", "title": "TELE-HIST-201 · Integração com provedor de vídeo", "labels": ["caso:telemedicina", "fase-2", "hipótese"], "priority": "low" },
+    { "id": "TELE-HIST-202", "text": "Job de véspera sobre o outbox: materializa salas das teleconsultas de amanhã, idempotente por consulta. TELE-RF-102, TELE-RN-005.", "title": "TELE-HIST-202 · Job de véspera (outbox)", "labels": ["caso:telemedicina", "fase-2", "hipótese"], "priority": "low" },
+    { "id": "TELE-HIST-203", "text": "Plano B operacional para falha do provedor (telefone/reagendamento), com sinalização na agenda do dia. TELE-RF-103.", "title": "TELE-HIST-203 · Plano B operacional", "labels": ["caso:telemedicina", "fase-2", "hipótese"], "priority": "low" },
+    { "id": "TELE-HIST-301", "text": "Componente interno de notificação: tabela de mensagens com estado/trilha, canal e-mail. TELE-RF-201, ADR-T04. Serve aos 3 casos.", "title": "TELE-HIST-301 · Componente de notificação", "labels": ["caso:telemedicina", "fase-3", "hipótese"], "priority": "low" },
+    { "id": "TELE-HIST-302", "text": "Consentimentos: canal de mensagem + atendimento remoto (versão do termo e timestamp). TELE-RF-202/203. Texto do jurídico (Q5).", "title": "TELE-HIST-302 · Consentimentos", "labels": ["caso:telemedicina", "fase-3", "hipótese"], "priority": "low" },
+    { "id": "TELE-HIST-303", "text": "Envio automático do link de teleconsulta via componente de notificação. Depende de TELE-HIST-201 e 301.", "title": "TELE-HIST-303 · Envio automático do link", "labels": ["caso:telemedicina", "fase-3", "hipótese"], "priority": "none" }
+  ]
+}
