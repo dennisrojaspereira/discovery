@@ -167,9 +167,11 @@ cmd_verify() {
 }
 
 cmd_reset() {
-  printf '\033[1;31mISSO APAGA TODOS OS DADOS (volumes, tokens, estado). Confirma? [digite: sim]\033[0m '
-  read -r answer
-  [ "$answer" = "sim" ] || { log "Abortado."; exit 1; }
+  if [ "${1:-}" != "--yes" ]; then
+    printf '\033[1;31mISSO APAGA TODOS OS DADOS (volumes, tokens, estado). Confirma? [digite: sim]\033[0m '
+    read -r answer
+    [ "$answer" = "sim" ] || { log "Abortado."; exit 1; }
+  fi
   stop_apps
   $COMPOSE_MAIN down -v
   $COMPOSE_PLANE down -v
@@ -195,7 +197,8 @@ case "${1:-}" in
   status)    cmd_status ;;
   seed)      cmd_seed ;;
   verify)    cmd_verify ;;
-  reset)     cmd_reset ;;
+  reset)     cmd_reset "${2:-}" ;;
   backup)    cmd_backup ;;
-  *) echo "Uso: ./lab.sh {bootstrap|start|stop|status|seed|verify|reset|backup}"; exit 1 ;;
+  panel)     log "Painel em http://localhost:3999"; node scripts/panel.mjs ;;
+  *) echo "Uso: ./lab.sh {bootstrap|start|stop|status|seed|verify|reset [--yes]|backup|panel}"; exit 1 ;;
 esac

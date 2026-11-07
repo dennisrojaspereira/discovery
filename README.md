@@ -32,7 +32,18 @@ Pré-requisitos: Docker (com Compose v2), Node.js ≥ 20, Git, bash (no Windows,
 ./lab.sh verify      # checklist completo com evidências em output/evidence/
 ```
 
-Outros: `stop`, `status`, `reset` (apaga volumes), `backup` (dump dos bancos).
+Outros: `stop`, `status`, `reset [--yes]` (apaga volumes), `backup` (dump dos bancos).
+
+### Painel de controle no navegador
+
+```bash
+./lab.sh panel   # → http://localhost:3999
+```
+
+Página local com **links diretos, credenciais (copiáveis), status ao vivo** de
+cada serviço e botões que executam os comandos do lab — incluindo
+**"Reproduzir do zero"** (reset + bootstrap + seed + verify) com a saída
+transmitida ao navegador. Escuta somente em `127.0.0.1`.
 
 ### Credenciais (somente laboratório — dados fictícios)
 
