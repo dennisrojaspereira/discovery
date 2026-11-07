@@ -114,6 +114,26 @@ resultado com link do PR.
 
 ---
 
+## Encore — criar um caso novo ao vivo (o golpe de misericórdia no ceticismo)
+
+Se sobrar tempo (ou se alguém insinuar que a demo é decorada), rode:
+
+```
+/discovery-novo-caso no-show
+```
+
+O agente **gera na hora** três reuniões inéditas sobre outro tema (ele é a LLM —
+sem API extra), publica nos canais `negocio-/produto-/tecnologia-<caso>` do
+Mattermost com as mesmas personas, e a mesma esteira processa o caso novo com
+saídas em `output/cases/<caso>/`. O caso `no-show` já vem pronto como exemplo:
+faltas sem aviso, conectando com a hipótese de confirmação prévia do Roberto e
+com um gancho real no código (o status `NO_SHOW` existe no schema, mas é um
+estado órfão — sem endpoint nem tela).
+
+> Diferença para "Reproduzir do zero" (botão do painel): o reset prova que a
+> **infraestrutura** é reprodutível; o caso novo prova que a **esteira
+> generaliza** — não há roteiro decorado.
+
 ## Perguntas frequentes de CTOs
 
 ### "Você está rodando vários agentes ou um agente por sessão?"

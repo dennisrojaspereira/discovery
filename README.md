@@ -66,6 +66,7 @@ Tokens de API gerados pelo bootstrap ficam em `.lab-state/` (fora do Git).
 | `/discovery-publicar` | Publica docs e backlog no Plane |
 | `/discovery-implementar` | História do Plane → branch → testes → PR no Forgejo → aviso no Mattermost |
 | `/discovery-completo` | Esteira completa com pontos de aprovação |
+| `/discovery-novo-caso <tema>` | Gera um caso inédito (o agente simula 3 reuniões sobre outro tema, publica em canais novos e roda a mesma esteira) |
 
 Cada etapa tem **ponto de aprovação humana**; nenhum PR é mergeado automaticamente.
 Artefatos gerados ficam em `output/` (síntese, brief, PRD, arquitetura, backlog,
